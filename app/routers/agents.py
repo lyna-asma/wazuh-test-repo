@@ -20,19 +20,7 @@ async def list_agents(
 
 @router.get("/{agent_id}")
 async def get_agent(agent_id: str):
-    """
-    Returns detail of a single agent by ID or name.
-    This is the data source for the Agent Details page (F13).
-    """
-    # If agent_id contains any non-digit, assume it's a name and resolve to ID
-    if not agent_id.isdigit():
-        # Query Wazuh to get agent by name
-        name_response = await wazuh.get(f"/agents/name/{agent_id}")
-        # Extract the numeric ID from the response
-        numeric_id = name_response["data"]["affected_items"][0]["id"]
-        return await wazuh.get(f"/agents/{numeric_id}")
-    # Otherwise, it's already a numeric ID
-    return await wazuh.get(f"/agents/{agent_id}")
+    return await wazuh.get("/agents", params={"agents_list": agent_id})
 
 @router.get("/{agent_id}/key")
 async def get_agent_key(agent_id: str):
